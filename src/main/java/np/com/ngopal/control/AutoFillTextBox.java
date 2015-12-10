@@ -20,19 +20,19 @@ import javafx.scene.control.TextField;
  *      AutoFillTextBox autobox = new AutoFillTextBox("helo","prefix","dog","city");
  *      autobox.setLimit(7);
  *      //..add autobox to your scene then the output must be like this:
- * </pre>
- * Output:
+ * </pre> Output:
  * <br>
  * <img src="http://blog.ngopal.com.np/wp-content/uploads/2011/07/screen.png" align="center"/>
  * <br>
- *
+ * <p>
  *
  *
  * @author Narayan G. Maharjan
  * @see <a href="http://www.blog.ngopal.com.np"> Blog </a>
- *
+ * <p>
  */
-public class AutoFillTextBox<T> extends Control implements AutoFillTextBoxFactory<T> {
+public class AutoFillTextBox<T> extends Control implements
+        AutoFillTextBoxFactory<T> {
 
     //==========
     //ATTRIBUTES
@@ -82,7 +82,6 @@ public class AutoFillTextBox<T> extends Control implements AutoFillTextBoxFactor
     public void requestFocus() {
         super.requestFocus();
         textbox.requestFocus();
-        System.out.println("Focued");
     }
 
     public T getItem() {
@@ -246,4 +245,5 @@ public class AutoFillTextBox<T> extends Control implements AutoFillTextBoxFactor
     protected double computeMinWidth(double height) {
         return Math.max(100.0d, textbox.getPrefWidth());
     }
+
 }

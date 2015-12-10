@@ -26,7 +26,7 @@ import javafx.util.Callback;
 
 /**
  * This class helps to change the skin of the AutoFillTextBox Control
- *
+ * <p>
  * @author Narayan G. Maharjan
  * @see <a href="http://www.blog.ngopal.com.np"> Blog </a>
  */
@@ -60,11 +60,12 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
 
     private String temporaryTxt = "";
 
-    /** ****************************
+    /**
+     * ****************************
      * CONSTRUCTOR
-     *
-     * @param text AutoTextBox
-     ***************************** */
+     * <p>
+     * @param text AutoTextBox ****************************
+     */
     public AutoFillTextBoxSkin(AutoFillTextBox text) {
         super(text);
 
@@ -82,7 +83,6 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
 
             @Override
             public void changed(ObservableValue ov, Object t, Object t1) {
-                System.out.println("Changed:" + t1);
                 if (listview.getItems().size() > 0 && listview.getItems() != null) {
                     showPopup();
                 } // Hiding popup when no matches found
@@ -120,7 +120,7 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
 
                     // @Override
                     public void invalidated(Observable ove) {
-                        ObservableValue<Boolean> ov = (ObservableValue<Boolean>)ove;
+                        ObservableValue<Boolean> ov = (ObservableValue<Boolean>) ove;
                         if (cell.getItem() != null && cell.isFocused()) {
                             //here we are using 'temporaryTxt' as temporary saving text
                             //If temporaryTxt length is 0 then assign with current rawText()
@@ -143,8 +143,7 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
                             //textbox.rawTextProperty().addListener(AutoFillTextBoxSkin.this);
                             textbox.textProperty().addListener(AutoFillTextBoxSkin.this);
                             textbox.selectRange(prev.length(), cell.getItem().toString().length());
-                            System.out.println(temporaryTxt.length() + "=" + textbox.getText().length() + "::"
-                                    + cell.getItem().toString().length());
+
                         }
                     }
 
@@ -167,6 +166,7 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
             public void changed(ObservableValue ov, Object t, Object t1) {
                 textbox.end();
             }
+
         });
 
         //popup
@@ -183,16 +183,18 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
 
     }
 
-    /** **************************************************************
-     * This is recursive function which gives the sum of X and Y
-     * position of all it's Parent and give the exact position where
-     * Popup needs to be visibled.
-     *
+    /**
+     * **************************************************************
+     * This is recursive function which gives the sum of X and Y position of all
+     * it's Parent and give the exact position where Popup needs to be visibled.
+     * <p>
      * @param p javafx.scene.Parent
      * @param w double
      * @param h double
-     * @return <a href="http://download.oracle.com/javafx/2.0/api/javafx/geometry/Dimension2D.html">Dimension2D</a>
-     **************************************************************** */
+     * @return
+     * <a href="http://download.oracle.com/javafx/2.0/api/javafx/geometry/Dimension2D.html">Dimension2D</a>
+     * ***************************************************************
+     */
     /* public Dimension2D getDimension(Parent p, double w, double h){
      * if(getScene().getRoot() == p)
      * return new Dimension2D(w,h);
@@ -202,7 +204,6 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
      * } */
     //@Override
    /* public void invalidated(ObservableValue ov) {
-     * System.out.println(ov.getValue());
      * if(ov.getValue().toString().length()<=0){
      * temporaryTxt = "";
      * if(autofillTextbox.getFilterMode()){ *
@@ -217,10 +218,12 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
      * }
      * }
      * } */
-    /** ********************************************************
-     * Selects the current Selected Item from the list
-     * and the content of that selected Item is set to textbox.
-     ********************************************************* */
+    /**
+     * ********************************************************
+     * Selects the current Selected Item from the list and the content of that
+     * selected Item is set to textbox.
+     * ********************************************************
+     */
     public void selectList() {
         Object i = listview.getSelectionModel().getSelectedItem();
         if (i != null) {
@@ -235,27 +238,28 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
         }
     }
 
-    /** ****************************************************
-     * This is the main event handler which handles all the
-     * event of the listview and textbox
-     *
-     * @param evt
-     ***************************************************** */
+    /**
+     * ****************************************************
+     * This is the main event handler which handles all the event of the
+     * listview and textbox
+     * <p>
+     * @param evt ****************************************************
+     */
     @Override
     public void handle(Event evt) {
 
-        /** ******************************
-         * EVENT HANDLING FOR 'TextBox'
-         ******************************* */
+        /**
+         * ******************************
+         * EVENT HANDLING FOR 'TextBox' ******************************
+         */
         if (evt.getEventType() == KeyEvent.KEY_PRESSED) {
             /* --------------------------------
              * - KeyEvent Handling for Textbox -
              * -------------------------------- */
-            KeyEvent t = (KeyEvent)evt;
+            KeyEvent t = (KeyEvent) evt;
             if (t.getSource() == textbox) {
                 //WHEN USER PRESS DOWN ARROW KEY FOCUS TRANSFER TO LISTVIEW
                 if (t.getCode() == KeyCode.DOWN) {
-                    //System.out.println("Focused Traversal");
                     if (popup.isShowing()) {
                         listview.requestFocus();
                         listview.getSelectionModel().select(0);
@@ -263,14 +267,15 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
                 }
 
             }
-        } /** ******************************
-         * EVENT HANDLING FOR 'LISTVIEW'
-         ******************************* */
+        } /**
+         * ******************************
+         * EVENT HANDLING FOR 'LISTVIEW' ******************************
+         */
         else if (evt.getEventType() == KeyEvent.KEY_RELEASED) {
             /* ---------------------------------
              * - KeyEvent Handling for ListView -
              * ---------------------------------- */
-            KeyEvent t = (KeyEvent)evt;
+            KeyEvent t = (KeyEvent) evt;
             if (t.getSource() == listview) {
                 if (t.getCode() == KeyCode.ENTER) {
                     selectList();
@@ -301,9 +306,9 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
      *
      * } */
     /**
-     * A Popup containing Listview is trigged from this function
-     * This function automatically resize it's height and width
-     * according to the width of textbox and item's cell height
+     * A Popup containing Listview is trigged from this function This function
+     * automatically resize it's height and width according to the width of
+     * textbox and item's cell height
      */
     public void showPopup() {
         listview.setPrefWidth(textbox.getWidth());
@@ -339,21 +344,20 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
 
     }
 
-    /** *********************************************
-     * When ever the the rawTextProperty is changed
-     * then this listener is activated
-     *
+    /**
+     * *********************************************
+     * When ever the the rawTextProperty is changed then this listener is
+     * activated
+     * <p>
      * @param ov
      * @param t
-     * @param t1
-     *********************************************** */
+     * @param t1 **********************************************
+     */
     @Override
     public void changed(ObservableValue<? extends String> ov, String t, String t1) {
-        //System.out.println(ov.getValue());
 
         if (ov.getValue().toString().length() > 0) {
             String txtdata = (textbox.getText()).trim();
-            System.out.println("[" + txtdata + "]");
 
             //Limit of data cell to be shown in ListView
             int limit = 0;
@@ -364,7 +368,6 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
                     String str = dat.toString().toLowerCase();
 
                     if (str.startsWith(compare)) {
-                        System.out.print("added one,");
                         list.add(dat);
                         limit++;
                     }
@@ -372,7 +375,6 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
                         break;
                     }
                 }
-                System.out.println();
                 if (listview.getItems().containsAll(list)
                         && listview.getItems().size() == list.size() && listview.getItems() != null) {
                     showPopup();
