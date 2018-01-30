@@ -13,3 +13,7 @@ You can download the jar file directly from here: <a target="_blank" href="https
 Netbeans User [ANT Only]
 =========================
 Use /ANT_NETBEANS files and place them in root dir of this repository and you can easily run from ANT Netbeans.
+
+Maven User
+=========================
+Since this project is built on maven project model there won't be any problem for maven dependencies to build and run.
