@@ -66,7 +66,6 @@ public class AutoFillTextBox<T> extends Control implements
 
     private ObservableList<T> data = FXCollections.observableArrayList();
 
-    ;
     private boolean filterMode;
 
     private int limit;
@@ -79,9 +78,8 @@ public class AutoFillTextBox<T> extends Control implements
      * }
      */
     public AutoFillTextBox(ObservableList<T> data) {
-        //this();
-        init();
         this.data = data;
+        init();
     }
 
     public AutoFillTextBox() {
@@ -94,12 +92,12 @@ public class AutoFillTextBox<T> extends Control implements
     private void init() {
         getStyleClass().setAll("autofill-text");
         textbox = new TextField();
-        listview = new ListView();
+        listview = new ListView<T>();
         limit = 5;
         filterMode = false;
 
+        setSkin(new AutoFillTextBoxSkin<T>(this));
         listen();
-
     }
 
     public void requestFocus() {
@@ -238,35 +236,6 @@ public class AutoFillTextBox<T> extends Control implements
     @Override
     protected double computeMaxHeight(double width) {
         return Math.max(22.0d, textbox.getHeight());
-    }
-
-//    @Override
-//    public void setPrefSize(double d, double d1) {
-//        super.setPrefSize(d, d1);
-//    }
-    @Override
-    protected double computePrefHeight(double width) {
-        return Math.max(22.0d, textbox.getPrefHeight());
-    }
-
-    @Override
-    protected double computeMinHeight(double width) {
-        return Math.max(22.0d, textbox.getPrefHeight());
-    }
-
-    @Override
-    protected double computePrefWidth(double height) {
-        return Math.max(100.0d, textbox.getPrefWidth());
-    }
-
-    @Override
-    protected double computeMaxWidth(double height) {
-        return Math.max(100.0d, textbox.getPrefWidth());
-    }
-
-    @Override
-    protected double computeMinWidth(double height) {
-        return Math.max(100.0d, textbox.getPrefWidth());
     }
 
 }

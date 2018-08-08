@@ -51,7 +51,7 @@ import javafx.util.Callback;
  */
 public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
         implements ChangeListener<String>,
-        EventHandler {
+        EventHandler<Event> {
 
     //Final Static variables for Window Insets
     private final static int TITLE_HEIGHT = 28;
@@ -59,7 +59,7 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
     private final static int WINDOW_BORDER = 8;
 
     //This is listview for showing the matched words
-    private ListView listview;
+    private ListView<T> listview;
 
     //This is Textbox where user types
     private TextField textbox;
@@ -68,7 +68,7 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
     private AutoFillTextBox autofillTextbox;
 
     //This is the ObservableData where the matching words are saved
-    private ObservableList data;
+    private ObservableList<T> data;
 
     //This is the Popup where listview is embedded.
     private Popup popup;
@@ -85,7 +85,7 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
      * <p>
      * @param text AutoTextBox ****************************
      */
-    public AutoFillTextBoxSkin(AutoFillTextBox text) {
+    public AutoFillTextBoxSkin(AutoFillTextBox<T> text) {
         super(text);
 
         //variable Assignment
@@ -98,10 +98,10 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
             //listview.getItems().addAll(text.getData());
             listview.setItems(text.getData());
         }
-        listview.itemsProperty().addListener(new ChangeListener() {
+        listview.itemsProperty().addListener(new ChangeListener<ObservableList<T>>() {
 
             @Override
-            public void changed(ObservableValue ov, Object t, Object t1) {
+            public void changed(ObservableValue<? extends ObservableList<T>> ov, ObservableList<T> t, ObservableList<T> t1) {
                 if (listview.getItems().size() > 0 && listview.getItems() != null) {
                     showPopup();
                 } // Hiding popup when no matches found
@@ -121,10 +121,9 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
             public ListCell<T> call(ListView<T> p) {
                 //A simple ListCell containing only Label
 
-                final ListCell cell = new ListCell() {
+                final ListCell<T> cell = new ListCell<T>() {
                     @Override
-                    public void updateItem(Object item,
-                            boolean empty) {
+                    public void updateItem(T item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
                             setText(item.toString());
@@ -135,12 +134,11 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
                 //A listener to know which cell was selected so that the textbox
                 //we can set the rawTextProperty of textbox
 
-                cell.focusedProperty().addListener(new InvalidationListener() {
+                cell.selectedProperty().addListener(new InvalidationListener() {
 
                     // @Override
                     public void invalidated(Observable ove) {
-                        ObservableValue<Boolean> ov = (ObservableValue<Boolean>) ove;
-                        if (cell.getItem() != null && cell.isFocused()) {
+                        if (cell.getItem() != null && cell.isSelected()) {
                             //here we are using 'temporaryTxt' as temporary saving text
                             //If temporaryTxt length is 0 then assign with current rawText()
                             String prev = null;
@@ -180,9 +178,9 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
         textbox.setOnKeyPressed(this);
         textbox.textProperty().addListener(this);
 
-        textbox.focusedProperty().addListener(new ChangeListener() {
+        textbox.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue ov, Object t, Object t1) {
+            public void changed(ObservableValue ov, Boolean t, Boolean t1) {
                 textbox.end();
             }
 
@@ -195,7 +193,7 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
 
         //list data and sorted ordered
         data = text.getData();
-        FXCollections.sort(data);
+        //FXCollections.sort(data);
 
         //Adding textbox in this control Children
         getChildren().addAll(textbox);
@@ -245,8 +243,10 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
      */
     public void selectList() {
         Object i = listview.getSelectionModel().getSelectedItem();
+        if(i == null && listview.getItems().size() != 0)
+            i = listview.getItems().get(0);
         if (i != null) {
-            textbox.setText(listview.getSelectionModel().getSelectedItem().toString());
+            textbox.setText(i.toString());
             listview.getItems().clear();
             textbox.requestFocus();
             textbox.requestLayout();
@@ -266,6 +266,8 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
      */
     @Override
     public void handle(Event evt) {
+	if(evt instanceof KeyEvent && ((KeyEvent)evt).getCode() == KeyCode.ESCAPE && popup.isShowing())
+		hidePopup();
 
         /**
          * ******************************
@@ -330,6 +332,7 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
      * textbox and item's cell height
      */
     public void showPopup() {
+        listview.getSelectionModel().clearSelection();
         listview.setPrefWidth(textbox.getWidth());
 
         if (listview.getItems().size() > 6) {
@@ -350,7 +353,6 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
         //getWindow().getX()+dimen.getWidth()+WINDOW_BORDER,
         //getWindow().getY()+dimen.getHeight()+TITLE_HEIGHT);
 
-        listview.getSelectionModel().clearSelection();
         listview.getFocusModel().focus(-1);
     }
 
@@ -381,9 +383,9 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
             //Limit of data cell to be shown in ListView
             int limit = 0;
             if (txtdata.length() > 0) {
-                ObservableList list = FXCollections.observableArrayList();
+                ObservableList<T> list = FXCollections.observableArrayList();
                 String compare = txtdata.toLowerCase();
-                for (Object dat : data) {
+                for (T dat : data) {
                     String str = dat.toString().toLowerCase();
 
                     if (str.startsWith(compare)) {
@@ -402,7 +404,6 @@ public class AutoFillTextBoxSkin<T> extends SkinBase<AutoFillTextBox<T>>
                 }
 
             } else {
-                //listview.getItems().clear();
                 if (autofillTextbox.getFilterMode()) {
                     listview.setItems(data);
                 } else {

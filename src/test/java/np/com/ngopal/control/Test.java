@@ -38,7 +38,7 @@ import np.com.ngopal.control.AutoFillTextBox;
  * @author WEBNEP
  */
 public class Test extends Application {
-    ObservableList<String> data = FXCollections.observableArrayList("Kathmandu", "Alabama", "Boston", "Tokyo");
+    ObservableList<String> data = FXCollections.observableArrayList("Kathmandu", "Alabama", "Alaska", "Andaman", "Berut", "Boston", "Tokyo");
 
     @Override
     public void start(Stage stage) throws Exception {
